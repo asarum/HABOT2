@@ -1,0 +1,179 @@
+2BWT-Library v1.0.0 (21st June 2011)
+------------------------------------
+2BWT - Bi-directional BWT index for pattern matching of DNA
+
+2BWT (Bi-directinal BWT) is a full-text index of DNA that can support 
+efficient pattern matching via backward search, forward search, or even 
+switching of search direction.
+
+The 2BWT index and search algorithms used by SOAP3-CPU were developed by the
+algorithms reserach group of the University of Hong Kong (T.W. Lam, C.M. Liu
+Alan Tam, Simon Wong, Thomas Wong, Edward Wu and S.M. Yiu).
+
+In this distribution package you can find the C source code that writes up the
+2BWT index library and its builder.
+
+
+Installation
+------------
+Un-tar the source code package
+    % gunzip 2bwt-builder-v1.0.0-x86-64bit.tar.gz
+    % tar -xvvf 2bwt-builder-v1.0.0-x86-64bit.tar
+
+Navigate into the directory with Makefile present
+    % make
+
+You should see a 2bwt-builder program being built.
+2bwt-builder is the program which builds 2BWT index from FASTA formatted
+reference sequence. For usage of this program, please proceed to the next
+section.
+
+
+Usage guide for 2bwt-builder
+----------------------------
+    % ./2bwt-builder <ref sequence>
+    <ref sequence> is the path to your FASTA formatted DNA sequences.
+
+e.g. 
+    % ./2bwt-builder ncbi.genome.fa
+In this example, 2bwt-builder will build up a 2BWT index on the sequence 
+ncbi.genome.fa. The output index will be named ncbi.genome.fa.index.*. 
+There should be 16 files created.
+
+
+    > Limitation
+    ------------
+    - 2bwt-builder assumes the input sequence is a well formatted FASTA file.
+    - The total length of the reference sequence cannot exceed the length of 
+      2^32-1 characters.
+    - No more than 255 separated sequence in the same FASTA file.
+
+
+    Pre-processing
+    --------------
+    - Handling of multi-sequence in a FASTA file:
+      There might be multiple sequences in a FASTA file, 2bwt-builder concatenates
+      all sequences together and remembers each of their lengths and names.
+    - Handling of ambiguous character:
+      There might be ambiguous characters in the input sequence. 2bwt-builder
+      will first remove all region of consecutive ambiguous characters segments
+      which has length>10. Then replace all ambiguous characters left in the sequence
+      with the character G.
+
+      2bwt-builder remembers the position and the lengths of the removed segments.
+
+      The resulting input after preprocessing should be a reference sequence with 
+      only A,C,G or T before the 2BWT index begins to build.
+
+
+Configuration guide for 2bwt-builder
+-------------------------------------
+The 2bwt-builder supports a variety of tuning of the index size. The most 
+common one is the sampling factor of the suffix array - BuildSaValue:SaValueFreq
+
+For example, a human genome that has 3 billion characters needs 12GB to store 
+the entire suffix array. By sampling only a fraction of it can save some 
+memory space.
+
+For maximum performance, 
+set [BuildSaValue:SaValueFreq] to 1. 
+The entire index would require a minimal of 16GB memory.
+
+For minimal space, 
+set [BuildSaValue:SaValueFreq] to 4. 
+The entire index should fit perfectly in a 8GB memory machine.
+
+(Advanced and not recommended) You may also look for some other advanced options 
+in the file 2bwt-builder.ini that governs the behavior of the builder. 
+
+
+Usage guide on 2BWT Library
+---------------------------
+Though 2bwt-builder is the only runnable program built from the compilation, there
+are also a handy 2BWT Library that is built together which allows developer to 
+implement different applications with 2BWT index rapidly.
+
+Below is a list of functions provided by the 2BWT Library(2BWT-Interface.h) and some
+brief description of them.
+
+    - BWTLoad2BWT(indexFilePrefix,saFileNameExtension)
+    It loads the 2BWT index from disk into memory
+
+    - BWTFree2BWT(idx2BWT)
+    It unloads the 2BWT index from memory
+
+    - BWTConvertPattern(idx2BWT,patternSource,patternLength,patternDestination)
+    In order for 2BWT to be able to process the character on your pattern,
+    you might first convert it from DNA character into a coding scheme recognised
+    by 2BWT. This function converts human readable DNA pattern into a 2BWT recognised one.
+    For all BWT search function below, all characters passing in and out them are
+    "converted" characters.
+
+    - BWTSARangeInitial(idx2BWT,c,saIndexLeft,saIndexRight)
+    BWT search for the SA range of the first character c.
+    Initial values of saIndexLeft and saIndexRight will be overwritten.
+
+    - BWTSARangeBackward(idx2BWT,c,saIndexLeft,saIndexRight)
+    Incremental BWT backward search for the SA range of cP where P is a pattern 
+    having SA range (saIndexLeft,saIndexRight).
+    Initial values of saIndexLeft and saIndexRight will be overwritten.
+
+    - BWTSARangeBackward_Bidirection(idx2BWT,c,saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight)
+    Incremental Bi-directional BWT backward search for the SA ranges of cP where P is a pattern
+    having SA range (saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight).
+    Initial values of saIndexLeft, saIndexRight, rev_saIndexLeft and rev_saIndexRight will be overwritten.
+
+    - BWTSARangeForward_Bidirection(idx2BWT,c,saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight)
+    Incremental Bi-directional BWT forward search for the SA range of Pc where P is a pattern
+    having SA range (saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight).
+    Initial values of saIndexLeft, saIndexRight, rev_saIndexLeft and rev_saIndexRight will be overwritten.
+
+    - BWTAllSARangesBackward(idx2BWT,saIndexLeft,saIndexRight,resultSaIndexesLeft,resultSaIndexesRight)
+    Incremental BWT backward search for all SA ranges of cP where P is a pattern
+    having SA range (saIndexLeft,saIndexRight) for all character c in alphabet set.
+
+    - BWTAllSARangesBackward_Bidirection(idx2BWT,c,
+          saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight,
+          resultSaIndexesLeft,resultSaIndexesRight,rev_resultSaIndexesLeft,rev_resultSaIndexesRight)
+    Incremental Bi-directional BWT backward search for all SA ranges of cP where P is a pattern
+    having SA range (saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight) for all character
+    c in alphabet set.
+
+    - BWTAllSARangesForward_Bidirection(idx2BWT,c,
+          saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight,
+          resultSaIndexesLeft,resultSaIndexesRight,rev_resultSaIndexesLeft,rev_resultSaIndexesRight)
+    Incremental Bi-directional BWT forware search for all SA ranges of Pc where P is a pattern
+    having SA range (saIndexLeft,saIndexRight,rev_saIndexLeft,rev_saIndexRight) for all character
+    c in alphabet set.
+
+    - BWTRetrievePositionFromSAIndex(idx2BWT,saIndex,sequenceId,offset)
+    Function to output an occurrence from an index within a SA range.
+    The occurring position pointed by an SA index will be output and represented
+    by a sequenceId:offset format which means the position is on the sequenceId-th
+    sequence in the original FASTA reference sequence starting at the offest-th
+    character on the sequence.
+
+    > More Guide
+    ------------
+    For more detail of the above functions please check out 2BWT-Interface.h.
+
+    > Compilation
+    -------------
+    % gcc <source file>.c BWT.o dictionary.o DNACount.o HSP.o HSPstatistic.o   \
+      iniparser.o inistrlib.o karlin.o MemManager.o MiscUtilities.o QSufSort.o \
+      r250.o Socket.o TextConverter.o 2BWT-Interface.o -lm -o <object program>
+
+    > Sample program
+    ----------------
+    % gcc 2BWT-Sample.c BWT.o dictionary.o DNACount.o HSP.o HSPstatistic.o   \
+      iniparser.o inistrlib.o karlin.o MemManager.o MiscUtilities.o QSufSort.o \
+      r250.o Socket.o TextConverter.o 2BWT-Interface.o -lm -o 2bwt-sample
+    % ./2bwt-sample
+
+
+Reference
+---------
+T.W. Lam, R. Li, Alan Tam, Simon Wong, Edward Wu, S.M. Yiu
+High Throughput Short Read Alignment via Bi-directional BWT. 
+BIBM 2009: 31-36
+

@@ -1,0 +1,26 @@
+GATB=../gatb-core-1.0.6-Linux
+BWT=2bwt-lib-v1.0.0
+DNA=../DNA2
+
+CPPFLAGS = -I$(GATB)/include/ -I${BWT} -I${DNA}  -std=c++0x -O3 -g
+LDFLAGS = -L$(GATB)/lib/ -L/nfs2/config/gcc/gcc-4.9.2/lib64/ -Wl,-R/nfs2/config/gcc/gcc-4.9.2/lib64  -lgatbcore -lhdf5 -ldl -lz -lpthread -std=c++0x -lz 
+CXX	= g++
+RM  = rm -f 
+
+# |====================================================================================================
+objects = ../DNA2/Kmer.o ../DNA2/SeqTool.o ../DNA2/gzstream.o ../DNA2/KmerBit.o ${BWT}/*.o
+
+# |====================================================================================================
+all: align_bwt
+.PHONY: all
+
+align_bwt:	align_bwt.o ${objects}
+	$(CXX) ${objects} align_bwt.o  $(LDFLAGS) ${CPPFLAGS}  -o align_bwt
+
+test:	test.o ${objects}
+	$(CXX) ${objects} test.o  $(LDFLAGS) ${CPPFLAGS}  -o test
+
+# |====================================================================================================
+align_bwt.o: align_bwt.cpp
+	$(CXX) $(LDFLAGS) ${CPPFLAGS} -c align_bwt.cpp
+

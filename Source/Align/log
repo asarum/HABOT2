@@ -1,0 +1,34 @@
+align_bwt [-options] reads.fa reference.fa out.al
+Options:
+[unique kmer]
+-g  the graph file contains unique k-mer(.h5 or .bit)
+-k  the kmer size of unique kmer
+-u  the min unique kmer for align[3]
+
+[scope]
+-x  the initial len to do align  [-1]
+-j  the jump len to get seed[1]
+-n  max align number for a query [20]
+
+[speed]
+-t  the thread number [1]
+-m  the align mode [1]
+    1: align very carefully,for uncrrected data
+    2: align with kmer, for corrected data
+
+the output format:
+(1) query ID
+(2) target ID
+(3) query len
+(4) target len
+(5) query strand
+(6) overlap len
+(7) match len
+(8) span len
+(9) percentage of block with >75% length is match
+(10) query anchor position
+(11) target anchor position
+(12) unique kmer size
+(13) mismatch
+(14) insert
+(15) deletion

@@ -1,0 +1,1 @@
+/nfs2/pipe/genomics/DNA_DENOVO/KmerAnalysis/KmerAnalysis/KmerAnalysis1.1_20121127/Bin/GenomeAnalysis.pl
