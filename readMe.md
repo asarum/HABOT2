@@ -124,7 +124,8 @@ The usage of this module:
 perl Denovo.pl <input.cfg>
 the input.cfg demo:
 
-`# the input file list, in fasta format
+```
+# the input file list, in fasta format
 [pb_lst]    file.lst
 
 # Data type:
@@ -160,16 +161,17 @@ the input.cfg demo:
 [queue] dna.q,rna.q,reseq.q
 [Project] og
 [max_job] 50
-[thread] 8`
+[thread] 8
+```
 We used two stategy to reduce error connections and deal conflicts:
 
-`(1) Using the unique kmer to do alignment to avoid the repeat region alignment.
+    (1) Using the unique kmer to do alignment to avoid the repeat region alignment.
 
-(2) Give up the connection when we face below situation:
+    (2) Give up the connection when we face below situation:
 
-(2a) Node A's best connection Node is B
-(2b) Node B's best connection Node is C
-(2c) Give up connection from A to B if B has no alignment with C`
+        (2a) Node A's best connection Node is B
+        (2b) Node B's best connection Node is C
+        (2c) Give up connection from A to B if B has no alignment with C`
 
 ### Remove Dupplication
 This module used the unique k-mer to remove dupplication.
