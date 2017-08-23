@@ -1,15 +1,20 @@
 Contact: Dongliang Zhan <zhandongliang@1gene.com.cn>
 
 A test website based on the Galaxy framework is available at:
-        http://61.130.10.147:9010/
-        username: test@1gene.com.cn
-        password: 1gene.com.cn
+
+http://61.130.10.147:9010/
+
+username: test@1gene.com.cn
+
+password: 1gene.com.cn
 
 Assembly Method
+
 We developed a hybrid assembly software name "HABOT2" to assemble Illumina data and PacBio data. This software conatins 3 main modules: a.graph module, b.align module, c.Denovo module.
 
 
 Graph module
+
 By couting the k-mer frequency from Illumina reads, we can get the unique k-mer by the distribution of frequency. The unique k-mer is a sequence of length k that only appear only once in a haploid genome[7]. This module count the k-mer by using Jellyfish[8], and make the k-mer that occurrence less than 1.5xpeak as unique k-mer. By using the unique k-mer, we can do alignment very quickly and accurracy without the repeat fluenced.
 
 The usage of this module:
