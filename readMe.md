@@ -2,11 +2,9 @@ Contact: Dongliang Zhan <zhandongliang@1gene.com.cn>
 
 A test website based on the Galaxy framework is available at:
 
-http://61.130.10.147:9010/
-
-username: test@1gene.com.cn
-
-password: 1gene.com.cn
+    http://61.130.10.147:9010/
+    username: test@1gene.com.cn
+    password: 1gene.com.cn
 
 ## Assembly Method
 
@@ -65,13 +63,14 @@ Usage
                     -d      The output directory
 ```
 Example:
-    For k=17, we recommend:
 
-      `perl Graph.pl pipe -i fq.lst -m 2 -k 17 -s 1,3,5 -d Kmer_17`
+For k=17, we recommend:
 
-    For k>17, we recommend:
+    perl Graph.pl pipe -i fq.lst -m 2 -k 17 -s 1,3,5 -d Kmer_17
 
-      `perl Graph.pl pipe -i fq.lst -m 2 -k 23 -s 1,2,4 -d Kmer_23`
+For k>17, we recommend:
+
+    perl Graph.pl pipe -i fq.lst -m 2 -k 23 -s 1,2,4 -d Kmer_23
   
 ### Align module
 We developed an alignment software that can align the long reads very fast. This software contains the following steps:
@@ -84,6 +83,7 @@ For each query, we firstly find anchors by geting the unique kmer between query 
 
 The usage of this module:
 
+```
 perl Align.pl 
 Name
         Align.pl  --The Alignment Tool
@@ -114,17 +114,20 @@ Usage
                       -q <INT>        sort result[2]
                                       1. by query name
                                       2. by reference name
+```
 
 Example
+
     perl Align -g k17.bit -k 17 -f 5 -u 3 -n 3 ref.fa query.fa
-Denovo module
+
+### Denovo module
 This module contains the align module and polish module that align the contig assembled by Illumina data to the PacBio reads, and build the pacbio graph via the alignment result. Then we get the assembly backbone by the graph.
 
 The usage of this module:
 
-perl Denovo.pl <input.cfg>
-the input.cfg demo:
+    perl Denovo.pl <input.cfg>
 
+the input.cfg demo:
 ```
 # the input file list, in fasta format
 [pb_lst]    file.lst
@@ -174,11 +177,12 @@ We used two stategy to reduce error connections and deal conflicts:
         (2b) Node B's best connection Node is C
         (2c) Give up connection from A to B if B has no alignment with C`
 
-### Remove Dupplication
+#### Remove Dupplication
 This module used the unique k-mer to remove dupplication.
 
 The usage of this module:
 
+```
 Name
         Compress.pl  --The compress module for fastq(a) files
 
@@ -218,7 +222,10 @@ Usage
 
                               -t <FLOAT>      trim the reads if (occupied_kmer/unique_kmer)>=this_value[0.7]
                               -n <INT>        thread number [8]
+```
 
 Example
-     Compress data:
-        perl Compress.pl compress -i file.lst -g kmer_17.h5 -k 17 -m 3 -t 0.7 -n 16
+
+Compress data:
+
+    perl Compress.pl compress -i file.lst -g kmer_17.h5 -k 17 -m 3 -t 0.7 -n 16
