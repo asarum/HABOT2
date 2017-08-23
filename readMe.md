@@ -1,9 +1,9 @@
 Contact: Dongliang Zhan <zhandongliang@1gene.com.cn>
 
 A test website based on the Galaxy framework is available at:
-http://61.130.10.147:9010/
-username: test@1gene.com.cn
-password: 1gene.com.cn
+        http://61.130.10.147:9010/
+        username: test@1gene.com.cn
+        password: 1gene.com.cn
 
 Assembly Method
 We developed a hybrid assembly software name "HABOT2" to assemble Illumina data and PacBio data. This software conatins 3 main modules: a.graph module, b.align module, c.Denovo module.
