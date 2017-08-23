@@ -8,12 +8,12 @@ username: test@1gene.com.cn
 
 password: 1gene.com.cn
 
-Assembly Method
+## Assembly Method
 
 We developed a hybrid assembly software name "HABOT2" to assemble Illumina data and PacBio data. This software conatins 3 main modules: a.graph module, b.align module, c.Denovo module.
 
 
-Graph module
+### Graph module
 
 By couting the k-mer frequency from Illumina reads, we can get the unique k-mer by the distribution of frequency. The unique k-mer is a sequence of length k that only appear only once in a haploid genome[7]. This module count the k-mer by using Jellyfish[8], and make the k-mer that occurrence less than 1.5xpeak as unique k-mer. By using the unique k-mer, we can do alignment very quickly and accurracy without the repeat fluenced.
 
@@ -72,7 +72,7 @@ Example
 
       perl Graph.pl pipe -i fq.lst -m 2 -k 23 -s 1,2,4 -d Kmer_23
   
-Align module
+### Align module
 We developed an alignment software that can align the long reads very fast. This software contains the following steps:
 
 (1) Build index for the reference by BWT[9] and load unique k-mer.
@@ -124,7 +124,7 @@ The usage of this module:
 perl Denovo.pl <input.cfg>
 the input.cfg demo:
 
-# the input file list, in fasta format
+`# the input file list, in fasta format
 [pb_lst]    file.lst
 
 # Data type:
@@ -160,17 +160,18 @@ the input.cfg demo:
 [queue] dna.q,rna.q,reseq.q
 [Project] og
 [max_job] 50
-[thread] 8
+[thread] 8`
 We used two stategy to reduce error connections and deal conflicts:
 
-(1) Using the unique kmer to do alignment to avoid the repeat region alignment.
+`(1) Using the unique kmer to do alignment to avoid the repeat region alignment.
 
 (2) Give up the connection when we face below situation:
 
-(1) Node A's best connection Node is B
-(2) Node B's best connection Node is C
-(3) Give up connection from A to B if B has no alignment with C
-Remove Dupplication
+(2a) Node A's best connection Node is B
+(2b) Node B's best connection Node is C
+(2c) Give up connection from A to B if B has no alignment with C`
+
+### Remove Dupplication
 This module used the unique k-mer to remove dupplication.
 
 The usage of this module:
