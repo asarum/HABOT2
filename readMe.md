@@ -19,11 +19,12 @@ By couting the k-mer frequency from Illumina reads, we can get the unique k-mer 
 
 The usage of this module:
 
+```
 Name
         Graph.pl  --The De novo tool to build k-mer graph
 
 Usage
-        Graph.pl <command> [arguments]
+    Graph.pl <command> [arguments]
 
         Command should be one of the following command. Arguments depend on specific command.
 
@@ -62,15 +63,15 @@ Usage
                                               6: record all kmer into .bit with -m is 0.5 the peak
 
                     -d      The output directory
-
-Example
+```
+Example:
     For k=17, we recommend:
 
-      perl Graph.pl pipe -i fq.lst -m 2 -k 17 -s 1,3,5 -d Kmer_17
+      `perl Graph.pl pipe -i fq.lst -m 2 -k 17 -s 1,3,5 -d Kmer_17`
 
     For k>17, we recommend:
 
-      perl Graph.pl pipe -i fq.lst -m 2 -k 23 -s 1,2,4 -d Kmer_23
+      `perl Graph.pl pipe -i fq.lst -m 2 -k 23 -s 1,2,4 -d Kmer_23`
   
 ### Align module
 We developed an alignment software that can align the long reads very fast. This software contains the following steps:
